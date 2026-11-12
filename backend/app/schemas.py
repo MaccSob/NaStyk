@@ -28,7 +28,7 @@ class CommuteCreate(SQLModel):
     departed_at: datetime
     planned_arrival: datetime
     actual_arrival: datetime
-    cause: Literal["traffic", "breakdown", "weather", "crowd", "other"] | None 
+    cause: Literal["traffic", "breakdown", "weather", "crowd", "other"] | None = None
     note: str | None = Field(default=None, max_length=500)
 
 class CommuteUpdate(SQLModel):
@@ -42,5 +42,12 @@ class CommuteUpdate(SQLModel):
 class CommuteRead(CommuteCreate):
     id: int
     delay_minutes: int 
+
+class RouteStats(SQLModel):
+    count: int
+    avg_delay_min: float | None
+    on_time_pct: float | None
+    p90_delay_min: float | None
+    recommended_buffer_min: float | None
 
 

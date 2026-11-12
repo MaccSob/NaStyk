@@ -10,7 +10,7 @@ class Route(SQLModel, table=True):
     destination: str
     mode: str
     planned_minutes: int
-    created_at: datetime = Field(default_factory=datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     commutes: list["Commute"] = Relationship(back_populates="route")
 
@@ -25,5 +25,4 @@ class Commute(SQLModel, table=True):
     route: Optional[Route] = Relationship(back_populates="commutes")
     cause: str
     note: str
-    delay_minutes: int   
     

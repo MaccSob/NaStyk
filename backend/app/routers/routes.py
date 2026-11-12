@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
-
+from app.stats import route_stats
 from app.db import get_session
 from app.models import Route
-from app.schemas import RouteCreate, RouteRead, RouteUpdate
+from app.schemas import RouteCreate, RouteRead, RouteUpdate, RouteStats
 
 router = APIRouter(prefix="/routes", tags=["routes"])
 
@@ -27,6 +27,12 @@ def get_routes(offset: int = 0, limit = Query(default=20, le=100), session: Sess
     routes = session.exec(select(Route).offset(offset).limit(limit).all())
     return routes
 
+@router.get("/{route_id}/stats", response_model=RouteStats)
+def get_route_stats(route_id: int, session: Session = Depends(get_session)):
+    route = session.get(Route, route_id)
+    if route is None:
+            raise HTTPException(status_code=404, detail="Route not found")
+    return route_stats(route.commutes)
 
 
 @router.patch("/{route_id}", response_model=RouteRead)
