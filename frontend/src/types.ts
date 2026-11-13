@@ -1,5 +1,23 @@
-export type Mode = "bus" | "tram" | "train" | "metro" | "car" | "other";
-export type Cause = "traffic" | "breakdown" | "weather" | "crowd" | "other";
+export const MODES  = ["bus",  "tram",  "train",  "metro", "car", "other"] as const;
+export const CAUSES = ["traffic", "breakdown", "weather", "crowd", "other"] as const;
+export type Mode = (typeof MODES)[number];
+export type Cause = (typeof CAUSES)[number];
+
+export type RouteCreate = Omit<Route, "id" | "created_at">;
+export type RouteUpdate = Partial<RouteCreate>;
+
+export type CommuteCreate = Omit<Commute, "id">;
+export type CommuteUpdate = Partial<CommuteCreate>;
+
+export const MODE_LABELS: Record<Mode, string> = {
+    bus: "Autobus", tram: "Tramwaj", train: 'Pociag',
+    metro: "Metro", car: "Samochod", other: "Inne",
+};
+export const CAUSE_LABELS: Record<Cause, string> = {
+    traffic: "Korek", breakdown: "Awaria", weather: 'Pogoda',
+    crowd: "Tlum", other: "Inne",
+};
+
 
 export interface Route {
   id: number;

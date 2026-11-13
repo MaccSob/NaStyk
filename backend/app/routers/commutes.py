@@ -22,7 +22,7 @@ def create_commute(payload: CommuteCreate, session: Session = Depends(get_sessio
     return commute
 
 @router.get("",response_model=list[CommuteRead])
-def get_commutes(
+def get_commute(
     route_id: int | None,
     offset: int = 0,
     limit: int = Query(default=20, le=100),

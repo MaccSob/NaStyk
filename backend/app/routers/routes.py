@@ -23,8 +23,8 @@ def get_route(route_id: int, session: Session = Depends(get_session)):
     return route
 
 @router.get("", response_model=list[RouteRead])
-def get_routes(offset: int = 0, limit = Query(default=20, le=100), session: Session = Depends(get_session)):
-    routes = session.exec(select(Route).offset(offset).limit(limit).all())
+def get_route(offset: int = 0, limit = Query(default=20, le=100), session: Session = Depends(get_session)):
+    routes = session.exec(select(Route).offset(offset).limit(limit)).all()
     return routes
 
 @router.get("/{route_id}/stats", response_model=RouteStats)
