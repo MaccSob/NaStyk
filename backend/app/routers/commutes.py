@@ -30,7 +30,7 @@ def get_commute(
 ):
     statement = select(Commute)
     if route_id is not None:
-        statement = statement.where(Commute.read_id == route_id)
+        statement = statement.where(Commute.route_id == route_id)
     statement = statement.order.by(Commute.departed.at.desc()).offset(offset).limit(limit)
     return session.exec(statement).all()
 

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { api } from "./api";
 import { type RouteCreate, type Route, type RouteStats, type Mode, MODES,} from "./types";
-import { MODE_LABELS, CAUSE_LABELS } from "./types";
+import { MODE_LABELS } from "./types";
+import CommuteList from "./CommuteList";
+import CommuteForm from "./commuteForm";
 
 interface RouteWithStats extends Route {
   stats: RouteStats;
@@ -47,7 +49,7 @@ async function loadRoutes() {
   }
 
   async function handleDelete(id: number) {
-    if (!window.confirm("Na pewno usunac trase?")) return;
+    if (!window.confirm("Usunac trase wraz ze wszystkimi jej przejazdami?")) return;
     try {
       await api.deleteRoute(id);
       await loadRoutes();
@@ -74,31 +76,53 @@ async function loadRoutes() {
   }, []);
 
   if (loading) return <p>Ładowanie…</p>;
-  if (error) return <p>Nie udało się pobrać danych: {error}</p>;
 
   return (
     <main>
       <h1>Na styk</h1>
+
+    {error && (
+      <p role="alert">
+        {error}<button onClick={() => setError(null)}>x</button>
+      </p>
+    )}
 
       <form onSubmit={handleSubmit}>
           <input
           value={form.name}
           onChange={(e) => setForm({...form, name: e.target.value})}
           required
+          placeholder="Nazwa"
+          />
+          <input
+          value={form.origin}
+          onChange={(e) => setForm({...form, origin: e.target.value})}
+          required
+          placeholder="Skąd"
           />
           <input
           value={form.destination}
           onChange={(e) => setForm({...form, destination: e.target.value})}
           required
+          placeholder="Dokąd"
           />
           <select
           value={form.mode}
           onChange={(e) => setForm({...form, mode: e.target.value as Mode})}
           >
+          
             {MODES.map((m) => (
               <option key={m} value={m}>{MODE_LABELS[m]}</option>
             ))}
             </select>
+            <input
+            type="number"
+            min={1}
+            value={form.planned_minutes}
+            onChange={(e) => setForm({...form, planned_minutes: Number(e.target.value)})}
+            placeholder="Planowany czas (min)"
+            required
+            />
             <button type="submit">Dodaj trase</button>
 
           </form>
@@ -118,6 +142,9 @@ async function loadRoutes() {
             </>
           )}
                       <button onClick={() => handleDelete(r.id)}>Usun</button>
+                      <CommuteList routeId={r.id} count={r.stats.count} onChanged={loadRoutes}/>
+                      <CommuteForm routeId={r.id} onCreated={loadRoutes}/>
+
         </article>
        
       ))}

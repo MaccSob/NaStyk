@@ -52,7 +52,7 @@ def delete_route(route_id: int, session: Session = Depends(get_session)):
     route = session.get(Route, route_id)
     if route is None:
         raise HTTPException(status_code=404, detail="Route not found")
-    if route.commutes:
-        raise HTTPException(status_code=409, detail="Route has commutes")
+    for commute in route.commutes:
+        session.delete(commute)
     session.delete(route)
     session.commit()

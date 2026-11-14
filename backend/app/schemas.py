@@ -41,7 +41,6 @@ class CommuteUpdate(SQLModel):
 
 class CommuteRead(CommuteCreate):
     id: int
-    delay_minutes: int 
 
 class RouteStats(SQLModel):
     count: int
