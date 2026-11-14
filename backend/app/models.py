@@ -24,6 +24,6 @@ class Commute(SQLModel, table=True):
     planned_arrival: NaiveDatetime
     actual_arrival: NaiveDatetime
     route: Optional[Route] = Relationship(back_populates="commutes")
-    cause: str
-    note: str
+    cause: str | None = None
+    note: str | None = None
     

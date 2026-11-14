@@ -58,6 +58,5 @@ def delete_commute(commute_id: int, session: Session = Depends(get_session)):
     commute = session.get(Commute, commute_id)
     if commute is None:
         raise HTTPException(status_code=404, detail="Commute not found")
-
     session.delete(commute)
     session.commit()
